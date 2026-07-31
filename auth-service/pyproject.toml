@@ -1,20 +1,23 @@
-[tool.ruff]
-line-length = 100
-target-version = "py313"
-
-[tool.ruff.lint]
-select = [
-    "E",  # pycodestyle
-    "F",  # pyflakes
-    "I",  # isort
-    "UP", # pyupgrade
-    "B",  # bugbear
+[project]
+name = "auth-service"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "luishbarros", email = "luishrbr@outlook.com" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "asyncpg>=0.31.0",
+    "bcrypt>=5.0.0",
+    "fastapi>=0.141.1",
+    "pyjwt>=2.13.0",
+    "sqlalchemy>=2.0.51",
 ]
 
-[tool.ruff.format]
-quote-style = "double"
+[project.scripts]
+auth-service = "auth_service:main"
 
-[tool.mypy]
-python_version = "3.13"
-strict = true
-warn_unused_configs = true
+[build-system]
+requires = ["uv_build>=0.12.0,<0.13.0"]
+build-backend = "uv_build"
