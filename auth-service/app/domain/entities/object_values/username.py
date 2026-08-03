@@ -2,7 +2,7 @@ from app.domain.exceptions import ValidationError
 
 
 class Username:
-    def __init__ (self, value:str):
+    def __init__(self, value: str):
         value = value.strip()
 
         if len(value) < 3:

@@ -6,7 +6,7 @@ from app.domain.exceptions import ValidationError
 class Email:
     EMAIL_REGEX = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 
-    def __init__(self, value:str):
+    def __init__(self, value: str):
         value = value.strip().lower()
 
         if not self.EMAIL_REGEX.match(value):

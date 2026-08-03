@@ -8,4 +8,4 @@ __all__ = [
     "RefreshTokenRepository",
     "UserRepository",
     "VerificationTokenRepository",
-]
+]

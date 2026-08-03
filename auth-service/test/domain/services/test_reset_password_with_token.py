@@ -1,7 +1,8 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+
 import pytest
 
-from app.domain.entities import User, Email, Username, Password, VerificationToken
+from app.domain.entities import Email, Password, User, Username, VerificationToken
 from app.domain.exceptions import ValidationError
 from app.domain.services import ResetPasswordWithToken
 from test.domain.fake_repositories import (
@@ -13,7 +14,7 @@ from test.domain.fake_repositories import (
 
 @pytest.mark.asyncio
 async def test_reset_password_with_token_success():
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     user_repo = FakeUserRepository()
     token_repo = FakeVerificationTokenRepository()
     hasher = FakePasswordHasher()
@@ -29,9 +30,11 @@ async def test_reset_password_with_token_success():
 
     assert updated_user.password.hashed_value == "hashed_new_secret_123"
     saved_user = await user_repo.get_by_id(user.id)
+    assert saved_user is not None
     assert saved_user.password.hashed_value == "hashed_new_secret_123"
 
     saved_token = await token_repo.get_by_token(raw_token, "password_reset")
+    assert saved_token is not None
     assert saved_token.used_at is not None
 
 

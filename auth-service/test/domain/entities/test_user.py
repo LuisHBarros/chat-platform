@@ -1,9 +1,10 @@
-from datetime import datetime, timezone
-from app.domain.entities import User, Email, Username, Password
+from datetime import UTC, datetime
+
+from app.domain.entities import Email, Password, User, Username
 
 
 def test_user_creation():
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     email = Email("user@example.com")
     username = Username("user123")
     password = Password("hashed_password")
@@ -21,7 +22,7 @@ def test_user_creation():
 
 
 def test_user_verify_and_authenticate():
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     user = User.create(Email("user@example.com"), Username("user123"), Password("hash"), now)
 
     verified_user = user.verify(now)
@@ -34,7 +35,7 @@ def test_user_verify_and_authenticate():
 
 
 def test_user_deactivate_and_activate():
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     user = User.create(Email("user@example.com"), Username("user123"), Password("hash"), now).verify(now)
 
     deactivated = user.deactivate(now)
@@ -47,7 +48,7 @@ def test_user_deactivate_and_activate():
 
 
 def test_user_change_password():
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     user = User.create(Email("user@example.com"), Username("user123"), Password("hash1"), now)
 
     new_password = Password("hash2")

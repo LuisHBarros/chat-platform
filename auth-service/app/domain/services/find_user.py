@@ -1,7 +1,9 @@
+from uuid import UUID
+
 from app.domain.entities.object_values import Email, Username
 from app.domain.entities.user import User
 from app.domain.repositories.user_repository import UserRepository
-from uuid import UUID
+
 
 class FindUser:
     def __init__(self, user_repository: UserRepository):

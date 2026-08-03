@@ -1,10 +1,11 @@
+import secrets
 from dataclasses import dataclass, replace
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 from typing import Literal
 from uuid import UUID, uuid4
-import secrets
 
 TokenType = Literal["email_verification", "password_reset"]
+
 
 @dataclass(frozen=True, slots=True)
 class VerificationToken:
@@ -23,7 +24,7 @@ class VerificationToken:
         token_type: TokenType,
         now: datetime,
         ttl_minutes: int = 60,
-    ) -> tuple["VerificationToken", str]:
+    ) -> tuple[VerificationToken, str]:
         raw_token = secrets.token_urlsafe(32)
         entity = cls(
             id=uuid4(),
@@ -39,7 +40,7 @@ class VerificationToken:
     def is_valid(self, now: datetime) -> bool:
         return self.used_at is None and self.expires_at > now
 
-    def mark_as_used(self, now: datetime) -> "VerificationToken":
+    def mark_as_used(self, now: datetime) -> VerificationToken:
         if self.used_at is not None:
             return self
         return replace(self, used_at=now)

@@ -1,12 +1,13 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from uuid import uuid4
-from app.domain.entities import TokenPayload, IssuedToken
+
+from app.domain.entities import IssuedToken, TokenPayload
 
 
 def test_token_payload_creation():
     user_id = uuid4()
     jti = uuid4()
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
 
     payload = TokenPayload(
         user_id=user_id,
@@ -22,7 +23,7 @@ def test_token_payload_creation():
 
 def test_issued_token_creation():
     jti = uuid4()
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
 
     issued = IssuedToken(
         token="jwt_string",

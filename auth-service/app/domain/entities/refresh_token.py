@@ -1,7 +1,5 @@
-
-
-from datetime import datetime
 from dataclasses import dataclass, replace
+from datetime import datetime
 from uuid import UUID, uuid4
 
 
@@ -13,7 +11,6 @@ class RefreshToken:
     expires_at: datetime
     created_at: datetime
     revoked_at: datetime | None = None
-
 
     @classmethod
     def create(cls, user_id: UUID, jti: UUID, expires_at: datetime, now: datetime) -> RefreshToken:
@@ -32,4 +29,4 @@ class RefreshToken:
     def revoke(self, now: datetime) -> RefreshToken:
         if self.revoked_at is not None:
             return self
-        return replace(self, revoked_at=now) 
+        return replace(self, revoked_at=now)

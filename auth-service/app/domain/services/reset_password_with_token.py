@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from app.domain.entities.object_values import Password
 from app.domain.entities.user import User
@@ -30,7 +30,7 @@ class ResetPasswordWithToken:
         if not new_password:
             raise ValidationError("New password is required")
 
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
 
         # 1. Look up token in repository
         token = await self.token_repository.get_by_token(token_str, "password_reset")

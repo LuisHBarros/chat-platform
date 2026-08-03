@@ -1,8 +1,7 @@
 from dataclasses import dataclass
+from datetime import datetime
 from typing import Literal
 from uuid import UUID
-from datetime import datetime
-
 
 TokenType = Literal["access", "refresh"]
 

@@ -4,7 +4,7 @@ from dataclasses import dataclass, replace
 from datetime import datetime
 from uuid import UUID, uuid4
 
-from app.domain.entities.object_values import Email, Username, Password
+from app.domain.entities.object_values import Email, Password, Username
 
 
 @dataclass(frozen=True, slots=True)

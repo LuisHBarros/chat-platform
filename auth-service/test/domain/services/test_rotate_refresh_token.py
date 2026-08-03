@@ -1,8 +1,9 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+
 import pytest
 
-from app.domain.entities import User, Email, Username, Password, RefreshToken
-from app.domain.exceptions import AuthenticationError, ValidationError
+from app.domain.entities import Email, Password, RefreshToken, User, Username
+from app.domain.exceptions import AuthenticationError
 from app.domain.services import RotateRefreshToken
 from test.domain.fake_repositories import (
     FakeCacheRepository,
@@ -14,7 +15,7 @@ from test.domain.fake_repositories import (
 
 @pytest.mark.asyncio
 async def test_rotate_refresh_token_success():
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     user_repo = FakeUserRepository()
     token_repo = FakeRefreshTokenRepository()
     cache_repo = FakeCacheRepository()
@@ -35,12 +36,13 @@ async def test_rotate_refresh_token_success():
 
     # Check old token is revoked
     old_token = await token_repo.get_by_jti(issued_refresh.jti)
+    assert old_token is not None
     assert old_token.revoked_at is not None
 
 
 @pytest.mark.asyncio
 async def test_rotate_refresh_token_blacklisted():
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     user_repo = FakeUserRepository()
     token_repo = FakeRefreshTokenRepository()
     cache_repo = FakeCacheRepository()

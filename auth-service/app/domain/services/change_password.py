@@ -1,4 +1,5 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+
 from app.domain.entities.object_values import Password
 from app.domain.entities.user import User
 from app.domain.exceptions import ValidationError
@@ -14,7 +15,7 @@ class ChangePassword:
     async def execute(self, user: User, new_password: str) -> User:
         if not new_password:
             raise ValidationError("New password is required")
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         hashed = self.password_hasher.hash(new_password)
         user = user.change_password(Password(hashed), now)
         return await self.user_repository.save(user)

@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from app.domain.entities.object_values import Email, Username
 from app.domain.entities.refresh_token import RefreshToken
@@ -34,12 +34,14 @@ class AuthenticateUser:
     async def with_email_and_password(self, email: Email, password: str) -> AuthResult:
         user = await self.user_repository.get_by_email(email)
         self._verify_credentials(user, password, "Invalid email or password")
+        assert user is not None
         self._ensure_user_can_authenticate(user)
         return await self._issue_tokens(user)
 
     async def with_username_and_password(self, username: Username, password: str) -> AuthResult:
         user = await self.user_repository.get_by_username(username)
         self._verify_credentials(user, password, "Invalid username or password")
+        assert user is not None
         self._ensure_user_can_authenticate(user)
         return await self._issue_tokens(user)
 
@@ -55,7 +57,7 @@ class AuthenticateUser:
             raise UserNotVerifiedError("User is not verified")
 
     async def _issue_tokens(self, user: User) -> AuthResult:
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
 
         access = self.token_service.create_access_token(user.id)
         refresh = self.token_service.create_refresh_token(user.id)

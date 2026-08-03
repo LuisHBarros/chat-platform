@@ -1,9 +1,11 @@
-from datetime import datetime, timezone
-from app.domain.entities.object_values import Email, Username, Password
+from datetime import UTC, datetime
+
+from app.domain.entities.object_values import Email, Password, Username
 from app.domain.entities.user import User
 from app.domain.exceptions import UserAlreadyExistsError, ValidationError
 from app.domain.repositories.user_repository import UserRepository
 from app.domain.services.password_hasher import PasswordHasher
+
 
 class CreateNewUser:
     def __init__(self, user_repository: UserRepository, password_hasher: PasswordHasher):
@@ -11,7 +13,7 @@ class CreateNewUser:
         self.password_hasher = password_hasher
 
     async def execute(self, email: Email, username: Username, password: str) -> User:
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         existing_email = await self.user_repository.get_by_email(email)
 
         if existing_email is not None:

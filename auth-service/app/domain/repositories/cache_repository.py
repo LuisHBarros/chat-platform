@@ -1,5 +1,6 @@
-from typing import Protocol
 from datetime import datetime
+from typing import Protocol
+
 
 class CacheRepository(Protocol):
     async def set(self, key: str, value: str, expires_at: datetime) -> None: ...

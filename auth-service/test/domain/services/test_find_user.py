@@ -1,14 +1,15 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+
 import pytest
 
-from app.domain.entities import User, Email, Username, Password
+from app.domain.entities import Email, Password, User, Username
 from app.domain.services import FindUser
 from test.domain.fake_repositories import FakeUserRepository
 
 
 @pytest.mark.asyncio
 async def test_find_user_by_id_email_username():
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     user_repo = FakeUserRepository()
 
     email = Email("findme@example.com")

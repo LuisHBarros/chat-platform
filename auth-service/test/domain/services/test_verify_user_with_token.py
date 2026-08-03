@@ -1,7 +1,8 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+
 import pytest
 
-from app.domain.entities import User, Email, Username, Password, VerificationToken
+from app.domain.entities import Email, Password, User, Username, VerificationToken
 from app.domain.exceptions import ValidationError
 from app.domain.services import VerifyUserWithToken
 from test.domain.fake_repositories import FakeUserRepository, FakeVerificationTokenRepository
@@ -9,7 +10,7 @@ from test.domain.fake_repositories import FakeUserRepository, FakeVerificationTo
 
 @pytest.mark.asyncio
 async def test_verify_user_with_token_success():
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     user_repo = FakeUserRepository()
     token_repo = FakeVerificationTokenRepository()
 
@@ -24,9 +25,11 @@ async def test_verify_user_with_token_success():
 
     assert verified_user.is_verified is True
     saved_user = await user_repo.get_by_id(user.id)
+    assert saved_user is not None
     assert saved_user.is_verified is True
 
     saved_token = await token_repo.get_by_token(raw_token, "email_verification")
+    assert saved_token is not None
     assert saved_token.used_at is not None
 
 

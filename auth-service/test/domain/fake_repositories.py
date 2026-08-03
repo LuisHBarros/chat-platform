@@ -1,11 +1,13 @@
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from uuid import UUID, uuid4
 
 from app.domain.entities.object_values import Email, Username
 from app.domain.entities.refresh_token import RefreshToken
 from app.domain.entities.token_payload import IssuedToken, TokenPayload
+from app.domain.entities.token_payload import TokenType as JWTTokenType
 from app.domain.entities.user import User
-from app.domain.entities.verification_token import TokenType, VerificationToken
+from app.domain.entities.verification_token import TokenType as VerificationTokenType
+from app.domain.entities.verification_token import VerificationToken
 from app.domain.repositories import (
     CacheRepository,
     RefreshTokenRepository,
@@ -59,7 +61,7 @@ class FakeRefreshTokenRepository(RefreshTokenRepository):
     async def revoke(self, jti: UUID) -> None:
         token = await self.get_by_jti(jti)
         if token:
-            now = datetime.now(timezone.utc)
+            now = datetime.now(UTC)
             self.tokens[token.id] = token.revoke(now)
 
 
@@ -87,7 +89,7 @@ class FakeVerificationTokenRepository(VerificationTokenRepository):
     async def create(self, token: VerificationToken) -> None:
         self.tokens[token.id] = token
 
-    async def get_by_token(self, token: str, token_type: TokenType) -> VerificationToken | None:
+    async def get_by_token(self, token: str, token_type: VerificationTokenType) -> VerificationToken | None:
         for item in self.tokens.values():
             if item.token == token and item.token_type == token_type:
                 return item
@@ -108,7 +110,7 @@ class FakePasswordHasher(PasswordHasher):
 class FakeTokenService(TokenService):
     def create_access_token(self, user_id: UUID) -> IssuedToken:
         jti = uuid4()
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         return IssuedToken(
             token=f"access_token_{user_id}_{jti}",
             jti=jti,
@@ -118,7 +120,7 @@ class FakeTokenService(TokenService):
 
     def create_refresh_token(self, user_id: UUID) -> IssuedToken:
         jti = uuid4()
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         return IssuedToken(
             token=f"refresh_token_{user_id}_{jti}",
             jti=jti,
@@ -130,8 +132,9 @@ class FakeTokenService(TokenService):
         parts = token.split("_")
         user_id = UUID(parts[2])
         jti = UUID(parts[3])
-        token_type = parts[0]
-        now = datetime.now(timezone.utc)
+        raw_type = parts[0]
+        token_type: JWTTokenType = "refresh" if raw_type == "refresh" else "access"
+        now = datetime.now(UTC)
         expires_at = now + timedelta(days=7) if token_type == "refresh" else now + timedelta(minutes=15)
         return TokenPayload(
             user_id=user_id,
@@ -139,4 +142,3 @@ class FakeTokenService(TokenService):
             expires_at=expires_at,
             token_type=token_type,
         )
-

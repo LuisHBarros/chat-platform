@@ -1,10 +1,11 @@
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from uuid import uuid4
+
 from app.domain.entities import VerificationToken
 
 
 def test_verification_token_creation():
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     user_id = uuid4()
 
     token_entity, raw_token = VerificationToken.create(
@@ -23,7 +24,7 @@ def test_verification_token_creation():
 
 
 def test_verification_token_mark_as_used():
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     token_entity, _ = VerificationToken.create(uuid4(), "password_reset", now)
 
     used = token_entity.mark_as_used(now)
@@ -34,7 +35,7 @@ def test_verification_token_mark_as_used():
 
 
 def test_verification_token_expiration():
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     past = now - timedelta(hours=2)
 
     token_entity, _ = VerificationToken.create(uuid4(), "email_verification", past, ttl_minutes=60)

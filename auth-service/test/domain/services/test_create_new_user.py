@@ -1,4 +1,5 @@
 import pytest
+
 from app.domain.entities.object_values import Email, Username
 from app.domain.exceptions import UserAlreadyExistsError, ValidationError
 from app.domain.services import CreateNewUser

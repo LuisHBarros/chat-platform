@@ -1,4 +1,5 @@
 import pytest
+
 from app.domain.entities.object_values import Email
 from app.domain.exceptions import ValidationError
 

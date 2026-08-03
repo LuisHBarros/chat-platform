@@ -1,10 +1,11 @@
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from uuid import uuid4
+
 from app.domain.entities import RefreshToken
 
 
 def test_refresh_token_creation_and_activity():
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     user_id = uuid4()
     jti = uuid4()
     expires_at = now + timedelta(days=7)
@@ -19,7 +20,7 @@ def test_refresh_token_creation_and_activity():
 
 
 def test_refresh_token_expiration():
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     user_id = uuid4()
     jti = uuid4()
     past = now - timedelta(days=1)
@@ -30,7 +31,7 @@ def test_refresh_token_expiration():
 
 
 def test_refresh_token_revocation():
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     user_id = uuid4()
     jti = uuid4()
     expires_at = now + timedelta(days=7)

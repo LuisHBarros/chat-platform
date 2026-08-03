@@ -1,9 +1,9 @@
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from app.domain.entities.refresh_token import RefreshToken
 from app.domain.exceptions import AuthenticationError
-from app.domain.repositories import RefreshTokenRepository, CacheRepository, UserRepository
+from app.domain.repositories import CacheRepository, RefreshTokenRepository, UserRepository
 from app.domain.services.token_service import TokenService
 
 
@@ -12,20 +12,22 @@ class TokenPair:
     access_token: str
     refresh_token: str
 
+
 class RefreshAccessToken:
     def __init__(
-            self,
-            token_service: TokenService,
-            refresh_token_repository: RefreshTokenRepository,
-            cache_repository: CacheRepository,
-            user_repository: UserRepository):
+        self,
+        token_service: TokenService,
+        refresh_token_repository: RefreshTokenRepository,
+        cache_repository: CacheRepository,
+        user_repository: UserRepository,
+    ):
         self.token_service = token_service
         self.refresh_token_repository = refresh_token_repository
         self.cache_repository = cache_repository
         self.user_repository = user_repository
 
     async def execute(self, refresh_token: str) -> TokenPair:
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
 
         payload = self.token_service.decode(refresh_token)
         if payload.token_type != "refresh":
@@ -46,24 +48,19 @@ class RefreshAccessToken:
         if not user.is_verified:
             raise AuthenticationError("User is not verified")
 
-
         await self.refresh_token_repository.save(storage.revoke(now))
-        await self.cache_repository.set(
-            f"blacklist:{payload.jti}",
-            str(user.id),
-            payload.expires_at
-        )
+        await self.cache_repository.set(f"blacklist:{payload.jti}", str(user.id), payload.expires_at)
 
         access_token = self.token_service.create_access_token(user.id)
-        refresh_token = self.token_service.create_refresh_token(user.id)
+        new_refresh_token = self.token_service.create_refresh_token(user.id)
 
         await self.refresh_token_repository.create(
             RefreshToken.create(
                 user_id=user.id,
-                jti=refresh_token.jti,
-                expires_at=refresh_token.expires_at,
-                now = now,
+                jti=new_refresh_token.jti,
+                expires_at=new_refresh_token.expires_at,
+                now=now,
             )
         )
 
-        return TokenPair(access_token=access_token.token, refresh_token=refresh_token.token)
+        return TokenPair(access_token=access_token.token, refresh_token=new_refresh_token.token)

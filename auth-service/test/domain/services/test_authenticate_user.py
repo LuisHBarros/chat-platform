@@ -1,7 +1,8 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+
 import pytest
 
-from app.domain.entities import User, Email, Username, Password
+from app.domain.entities import Email, Password, User, Username
 from app.domain.exceptions import AuthenticationError, UserNotActiveError, UserNotVerifiedError
 from app.domain.services import AuthenticateUser
 from test.domain.fake_repositories import (
@@ -14,7 +15,7 @@ from test.domain.fake_repositories import (
 
 @pytest.mark.asyncio
 async def test_authenticate_with_email_success():
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     user_repo = FakeUserRepository()
     hasher = FakePasswordHasher()
     token_repo = FakeRefreshTokenRepository()
@@ -35,7 +36,7 @@ async def test_authenticate_with_email_success():
 
 @pytest.mark.asyncio
 async def test_authenticate_with_username_success():
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     user_repo = FakeUserRepository()
     hasher = FakePasswordHasher()
     token_repo = FakeRefreshTokenRepository()
@@ -67,7 +68,7 @@ async def test_authenticate_invalid_credentials():
 
 @pytest.mark.asyncio
 async def test_authenticate_unverified_user():
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     user_repo = FakeUserRepository()
     hasher = FakePasswordHasher()
 
@@ -83,7 +84,7 @@ async def test_authenticate_unverified_user():
 
 @pytest.mark.asyncio
 async def test_authenticate_inactive_user():
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     user_repo = FakeUserRepository()
     hasher = FakePasswordHasher()
 

@@ -1,7 +1,8 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+
 import pytest
 
-from app.domain.entities import User, Email, Username, Password, RefreshToken
+from app.domain.entities import Email, Password, RefreshToken, User, Username
 from app.domain.exceptions import AuthenticationError
 from app.domain.services import RefreshAccessToken
 from test.domain.fake_repositories import (
@@ -14,7 +15,7 @@ from test.domain.fake_repositories import (
 
 @pytest.mark.asyncio
 async def test_refresh_access_token_success():
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     user_repo = FakeUserRepository()
     token_repo = FakeRefreshTokenRepository()
     cache_repo = FakeCacheRepository()
@@ -43,7 +44,9 @@ async def test_refresh_access_token_invalid_token_type():
 
     refresher = RefreshAccessToken(token_service, token_repo, cache_repo, user_repo)
 
-    access_token = token_service.create_access_token(User.create(Email("a@b.com"), Username("aaa"), Password("p"), datetime.now(timezone.utc)).id).token
+    access_token = token_service.create_access_token(
+        User.create(Email("a@b.com"), Username("aaa"), Password("p"), datetime.now(UTC)).id
+    ).token
 
     with pytest.raises(AuthenticationError, match="Invalid refresh token"):
         await refresher.execute(access_token)

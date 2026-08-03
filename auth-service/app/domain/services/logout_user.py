@@ -1,4 +1,5 @@
 import asyncio
+
 from app.domain.entities.token_payload import TokenPayload
 from app.domain.exceptions import ValidationError
 from app.domain.repositories.cache_repository import CacheRepository
@@ -32,4 +33,3 @@ class LogoutUser:
                 tasks.append(self.refresh_token_repository.revoke(token_payload.jti))
 
         await asyncio.gather(*tasks)
-

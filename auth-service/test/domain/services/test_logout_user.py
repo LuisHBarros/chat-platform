@@ -1,8 +1,9 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from uuid import uuid4
+
 import pytest
 
-from app.domain.entities import TokenPayload, RefreshToken
+from app.domain.entities import RefreshToken, TokenPayload
 from app.domain.exceptions import ValidationError
 from app.domain.services import LogoutUser
 from test.domain.fake_repositories import FakeCacheRepository, FakeRefreshTokenRepository
@@ -14,7 +15,7 @@ async def test_logout_user_blacklists_cache_and_revokes_db():
     token_repo = FakeRefreshTokenRepository()
     logout_service = LogoutUser(cache_repo, token_repo)
 
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     user_id = uuid4()
     jti = uuid4()
 

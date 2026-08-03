@@ -18,24 +18,19 @@ class SqlAlchemyUserRepository:
             return None
         return self._to_domain(model)
 
-    async def get_by_email(self, email: Email) -> User | None   :
-        result = await self.session.execute(
-            select(UserModel).where(UserModel.email == email.value)
-        )
+    async def get_by_email(self, email: Email) -> User | None:
+        result = await self.session.execute(select(UserModel).where(UserModel.email == email.value))
         model = result.scalar_one_or_none()
         if model is None:
             return None
         return self._to_domain(model)
 
     async def get_by_username(self, username: Username) -> User | None:
-        result = await self.session.execute(
-            select(UserModel).where(UserModel.username == username.value)
-        )
+        result = await self.session.execute(select(UserModel).where(UserModel.username == username.value))
         model = result.scalar_one_or_none()
         if model is None:
             return None
         return self._to_domain(model)
-
 
     async def save(self, user: User) -> User:
         model = await self.session.get(UserModel, user.id)
