@@ -1,0 +1,17 @@
+
+
+from typing import Protocol
+from uuid import UUID
+
+from app.domain.entities.refresh_token import RefreshToken
+
+
+class RefreshTokenRepository(Protocol):
+    async def get_by_jti(self, jti: UUID) -> RefreshToken | None:
+        ...
+    async def create(self, refresh_token: RefreshToken) -> None:
+        ...
+    async def save(self, refresh_token: RefreshToken) -> None:
+        ...
+    async def revoke(self, jti: UUID) -> None:
+        ...
