@@ -1,5 +1,7 @@
 import re
 
+from app.domain.exceptions import ValidationError
+
 
 class Email:
     EMAIL_REGEX = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
@@ -8,7 +10,7 @@ class Email:
         value = value.strip().lower()
 
         if not self.EMAIL_REGEX.match(value):
-            raise ValueError("Invalid email")
+            raise ValidationError("Invalid email")
         self._value = value
 
     @property

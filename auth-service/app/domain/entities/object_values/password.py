@@ -1,7 +1,10 @@
+from app.domain.exceptions import ValidationError
+
+
 class Password:
     def __init__(self, hashed_value:str):
         if not hashed_value:
-            raise ValueError("Password hash cannot be empty")
+            raise ValidationError("Password hash cannot be empty")
 
         self._hashed_value = hashed_value
 
