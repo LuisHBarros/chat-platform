@@ -3,8 +3,9 @@ from datetime import datetime, timezone
 from app.domain.entities import RefreshToken
 from app.domain.exceptions import ValidationError, AuthenticationError
 from app.domain.repositories import CacheRepository, RefreshTokenRepository, UserRepository
-from app.domain.services import TokenService
 from app.domain.services.authenticate_user import AuthResult
+from app.domain.services.token_service import TokenService
+
 
 
 class RotateRefreshToken:
