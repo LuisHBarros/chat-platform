@@ -1,0 +1,10 @@
+from typing import Protocol
+from app.domain.entities.verification_token import VerificationToken, TokenType
+
+class VerificationTokenRepository(Protocol):
+    async def create(self, token: VerificationToken) -> None:
+        ...
+    async def get_by_token(self, token: str, token_type: TokenType) -> VerificationToken | None:
+        ...
+    async def save(self, token: VerificationToken) -> None:
+        ...
