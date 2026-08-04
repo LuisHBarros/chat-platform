@@ -30,20 +30,20 @@ jobs:
 
       - name: Install dependencies
         working-directory: ./auth-service
-        run: uv sync --locked --no-build
+        run: uv sync --frozen --no-build
 
       - name: Run Ruff Linter
         working-directory: ./auth-service
-        run: uv run ruff check .
+        run: uv run --no-build --frozen ruff check .
 
       - name: Run Ruff Formatter Check
         working-directory: ./auth-service
-        run: uv run ruff format --check .
+        run: uv run --no-build --frozen ruff format --check .
 
       - name: Run Mypy Type Checker
         working-directory: ./auth-service
-        run: uv run mypy app test
+        run: uv run --no-build --frozen mypy app test
 
       - name: Run Pytest Unit Tests
         working-directory: ./auth-service
-        run: uv run python -m pytest test/domain -v
+        run: uv run --no-build --frozen python -m pytest test/domain -v
