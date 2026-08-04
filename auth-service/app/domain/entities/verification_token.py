@@ -38,7 +38,10 @@ class VerificationToken:
         return entity, raw_token
 
     def is_valid(self, now: datetime) -> bool:
-        return self.used_at is None and self.expires_at > now
+        from datetime import UTC
+        exp = self.expires_at if self.expires_at.tzinfo is not None else self.expires_at.replace(tzinfo=UTC)
+        current = now if now.tzinfo is not None else now.replace(tzinfo=UTC)
+        return self.used_at is None and exp > current
 
     def mark_as_used(self, now: datetime) -> VerificationToken:
         if self.used_at is not None:

@@ -24,7 +24,10 @@ class RefreshToken:
         )
 
     def is_active(self, now: datetime) -> bool:
-        return self.revoked_at is None and self.expires_at > now
+        from datetime import UTC
+        exp = self.expires_at if self.expires_at.tzinfo is not None else self.expires_at.replace(tzinfo=UTC)
+        current = now if now.tzinfo is not None else now.replace(tzinfo=UTC)
+        return self.revoked_at is None and exp > current
 
     def revoke(self, now: datetime) -> RefreshToken:
         if self.revoked_at is not None:
