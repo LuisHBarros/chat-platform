@@ -5,12 +5,10 @@ from uuid import UUID, uuid4
 
 from sqlalchemy import Boolean, DateTime, String, func
 from sqlalchemy.dialects.postgresql import UUID as GUID
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.types import Text
 
-
-class Base(DeclarativeBase):
-    pass
+from app.infrastructure.database.models.base import Base
 
 
 class UserModel(Base):

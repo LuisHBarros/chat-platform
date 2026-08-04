@@ -5,10 +5,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.domain.entities.object_values import Email, Password, Username
 from app.domain.entities.user import User
+from app.domain.repositories import UserRepository
 from app.infrastructure.database.models.user_model import UserModel
 
 
-class SqlAlchemyUserRepository:
+class SqlAlchemyUserRepository(UserRepository):
     def __init__(self, session: AsyncSession):
         self.session = session
 
