@@ -47,8 +47,10 @@ engine: AsyncEngine = create_engine()
 AsyncSessionFactory: async_sessionmaker[AsyncSession] = create_session_factory(engine=engine)
 
 
+from typing import Any
+
 async def get_db_session(
-    session_factory: async_sessionmaker[AsyncSession] | None = None,
+    session_factory: Any = None,
 ) -> AsyncGenerator[AsyncSession]:
     """Async generator yielding an AsyncSession for database operations.
 
