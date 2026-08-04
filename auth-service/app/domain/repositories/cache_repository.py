@@ -1,7 +1,8 @@
 from datetime import datetime
-from typing import Protocol
+from typing import Protocol, runtime_checkable
 
 
+@runtime_checkable
 class CacheRepository(Protocol):
     async def set(self, key: str, value: str, expires_at: datetime) -> None: ...
     async def get(self, key: str) -> str | None: ...

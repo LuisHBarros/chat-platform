@@ -3,6 +3,7 @@ from .authenticate_user import AuthenticateUser
 from .change_password import ChangePassword
 from .create_new_user import CreateNewUser
 from .deactivate_user import DeactivateUser
+from .email_service import EmailService
 from .find_user import FindUser
 from .logout_user import LogoutUser
 from .password_hasher import PasswordHasher
@@ -19,6 +20,7 @@ __all__ = [
     "ChangePassword",
     "CreateNewUser",
     "DeactivateUser",
+    "EmailService",
     "FindUser",
     "LogoutUser",
     "PasswordHasher",
@@ -29,3 +31,4 @@ __all__ = [
     "VerifyUser",
     "VerifyUserWithToken",
 ]
+

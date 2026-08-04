@@ -20,3 +20,8 @@ class UserAlreadyExistsError(DomainError):
 
 class ValidationError(DomainError):
     """Invalid value objects or inputs."""
+
+
+class EmailDeliveryError(DomainError):
+    """Failed to deliver email."""
+

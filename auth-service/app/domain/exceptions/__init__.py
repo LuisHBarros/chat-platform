@@ -1,6 +1,7 @@
 from app.domain.exceptions.exceptions import (
     AuthenticationError,
     DomainError,
+    EmailDeliveryError,
     UserAlreadyExistsError,
     UserNotActiveError,
     UserNotVerifiedError,
@@ -10,6 +11,7 @@ from app.domain.exceptions.exceptions import (
 __all__ = [
     "AuthenticationError",
     "DomainError",
+    "EmailDeliveryError",
     "UserAlreadyExistsError",
     "UserNotActiveError",
     "UserNotVerifiedError",
