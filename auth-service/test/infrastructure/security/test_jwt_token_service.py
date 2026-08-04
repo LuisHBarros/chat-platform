@@ -14,7 +14,6 @@ def secret_key() -> str:
     return "super-secret-key-for-testing-jwt-service-at-least-32-bytes-long"
 
 
-
 @pytest.fixture
 def jwt_service(secret_key: str) -> JwtTokenService:
     return JwtTokenService(

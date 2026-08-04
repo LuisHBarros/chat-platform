@@ -14,9 +14,7 @@ class SqlAlchemyRefreshTokenRepository(RefreshTokenRepository):
         self.session = session
 
     async def get_by_jti(self, jti: UUID) -> RefreshToken | None:
-        result = await self.session.execute(
-            select(RefreshTokenModel).where(RefreshTokenModel.jti == jti)
-        )
+        result = await self.session.execute(select(RefreshTokenModel).where(RefreshTokenModel.jti == jti))
         model = result.scalar_one_or_none()
         if model is None:
             return None
@@ -38,9 +36,7 @@ class SqlAlchemyRefreshTokenRepository(RefreshTokenRepository):
         await self.session.flush()
 
     async def revoke(self, jti: UUID) -> None:
-        result = await self.session.execute(
-            select(RefreshTokenModel).where(RefreshTokenModel.jti == jti)
-        )
+        result = await self.session.execute(select(RefreshTokenModel).where(RefreshTokenModel.jti == jti))
         model = result.scalar_one_or_none()
         if model is not None:
             model.revoked_at = datetime.now(UTC)

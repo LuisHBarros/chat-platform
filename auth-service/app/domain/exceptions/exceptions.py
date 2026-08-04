@@ -24,4 +24,3 @@ class ValidationError(DomainError):
 
 class EmailDeliveryError(DomainError):
     """Failed to deliver email."""
-

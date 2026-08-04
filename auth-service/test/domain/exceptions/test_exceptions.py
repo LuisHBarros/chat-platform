@@ -23,4 +23,3 @@ def test_raise_domain_exceptions():
         raise AuthenticationError("Invalid password")
     except DomainError as err:
         assert str(err) == "Invalid password"
-
