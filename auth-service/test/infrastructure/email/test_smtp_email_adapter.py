@@ -57,7 +57,7 @@ async def test_send_email_success():
             body_text="Test Body",
         )
 
-        mock_smtp_cls.assert_called_once_with("localhost", 1025)
+        mock_smtp_cls.assert_called_once_with("localhost", 1025, timeout=10.0)
         mock_smtp.send_message.assert_called_once()
         sent_msg = mock_smtp.send_message.call_args[0][0]
         assert sent_msg["To"] == "test@example.com"
@@ -87,6 +87,28 @@ async def test_send_email_with_tls_and_auth():
 
         mock_smtp.starttls.assert_called_once()
         mock_smtp.login.assert_called_once_with("smtp_user", "smtp_password")
+        mock_smtp.send_message.assert_called_once()
+
+
+@pytest.mark.asyncio
+async def test_send_email_with_ssl():
+    adapter = SMTPEmailAdapter(
+        host="smtp.example.com",
+        port=465,
+        use_ssl=True,
+    )
+
+    with patch("smtplib.SMTP_SSL") as mock_smtp_ssl_cls:
+        mock_smtp = MagicMock()
+        mock_smtp_ssl_cls.return_value.__enter__.return_value = mock_smtp
+
+        await adapter.send_email(
+            recipient="user@example.com",
+            subject="SSL Test",
+            body_html="<p>SSL Test</p>",
+        )
+
+        mock_smtp_ssl_cls.assert_called_once_with("smtp.example.com", 465, timeout=10.0)
         mock_smtp.send_message.assert_called_once()
 
 

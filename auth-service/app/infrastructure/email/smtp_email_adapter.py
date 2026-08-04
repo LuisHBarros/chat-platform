@@ -20,6 +20,8 @@ class SMTPEmailAdapter(EmailService):
         from_email: str | None = None,
         from_name: str | None = None,
         use_tls: bool | None = None,
+        use_ssl: bool | None = None,
+        timeout: float = 10.0,
         frontend_url: str | None = None,
     ) -> None:
         self.host: str = host or os.getenv("SMTP_HOST") or "localhost"
@@ -29,12 +31,19 @@ class SMTPEmailAdapter(EmailService):
         self.from_email: str = from_email or os.getenv("SMTP_FROM_EMAIL") or "noreply@discord-like.com"
         self.from_name: str = from_name or os.getenv("SMTP_FROM_NAME") or "Discord-Like Auth"
         self.use_tls: bool = use_tls if use_tls is not None else (os.getenv("SMTP_USE_TLS", "false").lower() == "true")
+        self.use_ssl: bool = use_ssl if use_ssl is not None else (os.getenv("SMTP_USE_SSL", "false").lower() == "true")
+        self.timeout: float = timeout
         self.frontend_url: str = frontend_url or os.getenv("FRONTEND_URL") or "http://localhost:3000"
 
     def _send_smtp_message(self, msg: EmailMessage) -> None:
         try:
-            with smtplib.SMTP(self.host, self.port) as server:
-                if self.use_tls:
+            if self.use_ssl:
+                server_ctx = smtplib.SMTP_SSL(self.host, self.port, timeout=self.timeout)
+            else:
+                server_ctx = smtplib.SMTP(self.host, self.port, timeout=self.timeout)
+
+            with server_ctx as server:
+                if self.use_tls and not self.use_ssl:
                     server.starttls()
                 if self.username and self.password:
                     server.login(self.username, self.password)
