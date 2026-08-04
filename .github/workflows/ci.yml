@@ -2,9 +2,11 @@ name: CI / Auth Service Quality & Test Pipeline
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
   auth-service-ci:
@@ -19,7 +21,7 @@ jobs:
         uses: astral-sh/setup-uv@6b9c6063abd6010835644d4c2e1bef4cf5cd0fca # v5.4.2
         with:
           enable-cache: true
-          version: "latest"
+          version: "0.8.12" # Pin to a specific version
 
       - name: Set up Python
         uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
@@ -28,20 +30,20 @@ jobs:
 
       - name: Install dependencies
         working-directory: ./auth-service
-        run: uv sync --frozen --no-build
+        run: uv sync --locked --no-build
 
       - name: Run Ruff Linter
         working-directory: ./auth-service
-        run: uv run --frozen --no-build ruff check .
+        run: uv run ruff check .
 
       - name: Run Ruff Formatter Check
         working-directory: ./auth-service
-        run: uv run --frozen --no-build ruff format --check .
+        run: uv run ruff format --check .
 
       - name: Run Mypy Type Checker
         working-directory: ./auth-service
-        run: uv run --frozen --no-build mypy app test
+        run: uv run mypy app test
 
       - name: Run Pytest Unit Tests
         working-directory: ./auth-service
-        run: uv run --frozen --no-build python -m pytest test/domain -v
+        run: uv run python -m pytest test/domain -v
